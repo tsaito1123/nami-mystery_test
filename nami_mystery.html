@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>謎解きゲーム</title>
+<style>
+  body {
+    font-family: "MS PGothic", "Osaka", sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 18px;
+    border-bottom: 1px solid #999;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+  }
+
+  .notice {
+    background: #fffde7;
+    border: 1px solid #e0c000;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  h2 {
+    font-size: 14px;
+    margin: 24px 0 8px;
+    color: #444;
+  }
+
+  .question-box {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.9;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 13px;
+    border: 1px solid #aaa;
+    background: white;
+    box-sizing: border-box;
+  }
+
+  input[type="text"]:focus {
+    outline: 1px solid #666;
+  }
+
+  button {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 5px 16px;
+    font-size: 12px;
+    background: #e0e0e0;
+    border: 1px solid #999;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #d0d0d0;
+  }
+
+  .result {
+    font-size: 12px;
+    color: #555;
+    margin-top: 4px;
+    min-height: 1em;
+  }
+
+  .result.ok  { color: #2a7a2a; }
+  .result.ng  { color: #aa2222; }
+
+  hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 28px 0;
+  }
+
+  .final-box {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 16px;
+    margin-top: 8px;
+  }
+
+  .final-box p {
+    font-size: 13px;
+    line-height: 1.8;
+    margin-bottom: 10px;
+  }
+
+  #finalResult {
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+  }
+
+  footer {
+    margin-top: 40px;
+    font-size: 11px;
+    color: #999;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>謎解きゲーム</h1>
+
+<div class="notice">
+  ※ このページは湊なみ3周年記念ファンプロジェクトのテスト版です。<br>
+  ※ 問題の内容は仮のものです。本番版は別ページをご確認ください。
+</div>
+
+<h2>問題1</h2>
+<div class="question-box">
+  ここに謎の問題文が入ります。<br>
+  ヒント：湊なみさんにまつわる思い出のキーワードを考えてみよう。
+  <label>答え：</label>
+  <input type="text" id="q1" placeholder="入力してください">
+  <button onclick="checkQ(1, '答え')">確認する</button>
+  <p class="result" id="r1"></p>
+</div>
+
+<h2>問題2</h2>
+<div class="question-box">
+  ここに謎の問題文が入ります。<br>
+  ヒント：3年間の配信を思い返してみて。
+  <label>答え：</label>
+  <input type="text" id="q2" placeholder="入力してください">
+  <button onclick="checkQ(2, '答え')">確認する</button>
+  <p class="result" id="r2"></p>
+</div>
+
+<h2>問題3</h2>
+<div class="question-box">
+  ここに謎の問題文が入ります。<br>
+  ヒント：なみちゃんの好きなものを思い浮かべて。
+  <label>答え：</label>
+  <input type="text" id="q3" placeholder="入力してください">
+  <button onclick="checkQ(3, '答え')">確認する</button>
+  <p class="result" id="r3"></p>
+</div>
+
+<hr>
+
+<h2>最終解答</h2>
+<div class="final-box">
+  <p>
+    3つの答えから得られたキーワードを組み合わせ、<br>
+    最終的な答えを入力してください。
+  </p>
+  <input type="text" id="finalQ" placeholder="最終答えを入力">
+  <br>
+  <button onclick="checkFinal()">答え合わせ</button>
+  <p id="finalResult"></p>
+</div>
+
+<footer>
+  湊なみ 3rd Anniversary ファンプロジェクト
+</footer>
+
+<script>
+  function checkQ(num, correct) {
+    const val = document.getElementById('q' + num).value.trim();
+    const el  = document.getElementById('r' + num);
+    if (!val) { el.textContent = ''; return; }
+    if (val === correct) {
+      el.textContent = '○ 正解です';
+      el.className = 'result ok';
+      document.getElementById('q' + num).disabled = true;
+    } else {
+      el.textContent = '× 不正解です';
+      el.className = 'result ng';
+    }
+  }
+
+  function checkFinal() {
+    const val = document.getElementById('finalQ').value.trim();
+    const el  = document.getElementById('finalResult');
+    if (val === '最終答え') {
+      el.textContent = '✓ 正解！クリアおめでとうございます！';
+      el.style.color = '#2a7a2a';
+    } else {
+      el.textContent = '× 不正解です。もう一度考えてみてください。';
+      el.style.color = '#aa2222';
+    }
+  }
+</script>
+</body>
+</html>
